@@ -114,6 +114,7 @@ class App(ctk.CTk):
         util.run_on_first_launch(dialog.get_input())
 
         self.card_input_box.configure(values=util.get_card_names())
+        self.card_input_box.set("Knight")
 
 if __name__ in "__main__":
     app = App()
