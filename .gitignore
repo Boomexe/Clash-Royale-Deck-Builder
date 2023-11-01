@@ -4,6 +4,6 @@ api_key.txt
 storage/seasons.json
 storage/top_players.json
 storage/cards.json
-storage/card_images/
+storage/card_images/*.png
 
 example.py
