@@ -113,6 +113,8 @@ class App(ctk.CTk):
         dialog = ctk.CTkInputDialog(text="Enter your API Key here", title="First Launch Requirements")
         util.run_on_first_launch(dialog.get_input())
 
+        self.card_input_box.configure(values=util.get_card_names())
+
 if __name__ in "__main__":
     app = App()
 
