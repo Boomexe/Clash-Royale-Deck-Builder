@@ -36,11 +36,17 @@ class App(ctk.CTk):
         self.tabview.add("Settings")
 
         # Settings Tab
+        self.set_max_decks_label = ctk.CTkLabel(self.tabview.tab("Settings"), text="Decks to find")
+        self.set_max_decks_label.pack()
+        self.set_max_decks_entry = ctk.CTkEntry(self.tabview.tab("Settings"))
+        self.set_max_decks_entry.pack(pady=10)
+        self.set_max_decks_button = ctk.CTkButton(self.tabview.tab("Settings"), text="Set", command=self.set_max_decks)
+        self.set_max_decks_button.pack()
         self.api_key_label = ctk.CTkLabel(self.tabview.tab("Settings"), text="Update API Key")
         self.api_key_label.pack()
         self.api_key_entry = ctk.CTkEntry(self.tabview.tab("Settings"), width=250)
         self.api_key_entry.pack()
-        self.api_key_button = ctk.CTkButton(self.tabview.tab("Settings"), text="Update API Key", command=lambda:util.update_api_key(self.api_key_entry.get()))
+        self.api_key_button = ctk.CTkButton(self.tabview.tab("Settings"), text="Update", command=lambda:util.update_api_key(self.api_key_entry.get()))
         self.api_key_button.pack(pady=10)
         self.api_key_button = ctk.CTkButton(self.tabview.tab("Settings"), text="Refresh Leaderboard", command=util.refresh_leaderboard)
         self.api_key_button.pack(pady=10)
@@ -78,6 +84,9 @@ class App(ctk.CTk):
 
     def change_appearance_mode_event(self, new_appearance_mode: str):
         ctk.set_appearance_mode(new_appearance_mode)
+    
+    def set_max_decks(self):
+        self.max_decks = int(self.set_max_decks_entry.get())
     
     def find_decks(self):
         if len(self.current_displayed_decks) > 1:
@@ -118,5 +127,4 @@ class App(ctk.CTk):
 
 if __name__ in "__main__":
     app = App()
-
     app.mainloop()
