@@ -20,7 +20,7 @@ class App(ctk.CTk):
         self.current_path = os.path.dirname(os.path.realpath(__file__))
 
         # Configure Window
-        self.title("Natharyan Dwapte Clash Royale Deck Generator")
+        self.title("Clash Royale Deck Generator")
         self.geometry(f"{1100}x{580}")
 
         # Grid Layout
