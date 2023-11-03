@@ -1,5 +1,6 @@
+import tkinter
 import utils.util as util
-# import tkinter
+import tkinter as tk
 # import tkinter.messagebox
 import customtkinter as ctk
 from PIL import Image
@@ -8,7 +9,31 @@ import os
 ctk.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
 ctk.set_default_color_theme("blue")  # Themes: "blue" (standard), "green", "dark-blue"
 
+class NumberInputEntry(ctk.CTkEntry):
+    def __init__(self, master=None, **kwargs):
+        # super().__init__(master, width, height, corner_radius, border_width, bg_color, fg_color, border_color, text_color, placeholder_text_color, textvariable, placeholder_text, font, state, **kwargs)
+        self.var = tk.StringVar()
+        ctk.CTkEntry.__init__(self, master, textvariable=self.var, **kwargs)
+        self.old_value = ''
+        self.var.trace('w', self.check)
+        self.get, self.set = self.var.get, self.var.set
 
+        self.min = 0
+        self.max = 10
+    
+    def check(self, *args):
+        if self.get().isdigit():
+            if int(self.get()) < self.min or int(self.get()) > self.max:
+                self.set(self.old_value)
+
+            else:
+                self.old_value = self.get()
+        
+        elif self.get() == '':
+            self.old_value = self.get()
+        
+        else:
+            self.set(self.old_value)
 
 class App(ctk.CTk):
     def __init__(self) -> None:
@@ -36,15 +61,13 @@ class App(ctk.CTk):
         self.tabview.add("Settings")
 
         # Settings Tab
-        self.set_max_decks_label = ctk.CTkLabel(self.tabview.tab("Settings"), text="Decks to find")
+        self.set_max_decks_label = ctk.CTkLabel(self.tabview.tab("Settings"), text="Decks to Find")
         self.set_max_decks_label.pack()
-        self.set_max_decks_entry = ctk.CTkEntry(self.tabview.tab("Settings"))
-        self.set_max_decks_entry.pack(pady=10)
-        self.set_max_decks_button = ctk.CTkButton(self.tabview.tab("Settings"), text="Set", command=self.set_max_decks)
-        self.set_max_decks_button.pack()
+        self.set_max_decks_entry = NumberInputEntry(self.tabview.tab("Settings"), justify=tk.CENTER, placeholder_text="Enter number of decks to find (1-10)...")
+        self.set_max_decks_entry.pack()
         self.api_key_label = ctk.CTkLabel(self.tabview.tab("Settings"), text="Update API Key")
         self.api_key_label.pack()
-        self.api_key_entry = ctk.CTkEntry(self.tabview.tab("Settings"), width=250)
+        self.api_key_entry = ctk.CTkEntry(self.tabview.tab("Settings"), width=250, placeholder_text="Enter API Key...")
         self.api_key_entry.pack()
         self.api_key_button = ctk.CTkButton(self.tabview.tab("Settings"), text="Update", command=lambda:util.update_api_key(self.api_key_entry.get()))
         self.api_key_button.pack(pady=10)
@@ -78,15 +101,14 @@ class App(ctk.CTk):
 
         # Default Values
         self.progressbar.configure(mode="indeterminnate")
+        self.set_max_decks_entry.insert(0, "5")
+        self.api_key_entry.insert(0, util.api_key)
 
         if util.is_first_launch:
             self.first_launch()
 
     def change_appearance_mode_event(self, new_appearance_mode: str):
         ctk.set_appearance_mode(new_appearance_mode)
-    
-    def set_max_decks(self):
-        self.max_decks = int(self.set_max_decks_entry.get())
     
     def find_decks(self):
         if len(self.current_displayed_decks) > 1:
@@ -97,7 +119,7 @@ class App(ctk.CTk):
 
         card_id = util.get_id_from_name(self.card_input_box.get())
 
-        decks = util.get_decks(card_id, self.max_decks)
+        decks = util.get_decks(card_id, int(self.set_max_decks_entry.get()))
 
         for deck_index, deck in enumerate(decks):
             deck_frame = ctk.CTkFrame(self.decks_frame)
