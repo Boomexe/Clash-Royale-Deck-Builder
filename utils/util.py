@@ -144,3 +144,16 @@ def refresh_everything() -> None:
 
 def refresh_leaderboard() -> None:
     fetch_top()
+
+def save_settings(values: dict) -> None:
+    with open("settings.json", 'w') as f:
+        f.write(json.dumps(values, indent=2))
+
+def load_settings() -> dict:
+    try:
+        with open("settings.json", "r") as f:
+            settings = json.load(f)
+            return settings
+    
+    except(FileNotFoundError):
+        return None
