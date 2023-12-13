@@ -1,6 +1,3 @@
-import tkinter
-from typing import Optional, Tuple, Union
-from customtkinter.windows.widgets.font import CTkFont
 import utils.util as util
 import tkinter as tk
 # import tkinter.messagebox
